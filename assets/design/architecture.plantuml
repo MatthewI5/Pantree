@@ -1,0 +1,40 @@
+
+@startuml
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+package "Client Layer" {
+    [Progressive Web App (PWA)] as pwa
+}
+
+package "Gateway & Security" {
+    [Reverse Proxy\n(Nginx / Traefik)] as proxy
+    [Auth Service\n(OAuth2 / JWT)] as auth
+}
+
+package "Application Backend" {
+    [FastAPI Core Engine] as api
+    [Celery Background Worker] as worker
+}
+
+package "Storage & Caching Layer" {
+    database "Redis\n(Cache & Broker)" as cache
+    [SQLAlchemy ORM] as orm
+    database "Database\n(SQLite / PostgreSQL)" as db
+}
+
+' Layout and connections
+pwa --> proxy : "HTTPS / WebSockets"
+proxy --> api : "Routes Traffic"
+api <..> auth : "Validates Tokens"
+
+api <--> cache : "Read/Write Cache"
+api --> cache : "Dispatches Heavy Tasks"
+cache --> worker : "Feeds Tasks"
+worker --> cache : "Updates Status"
+
+api --> orm : "Data Queries"
+worker --> orm : "Background Processing"
+orm --> db : "Abstracted SQL"
+
+@enduml

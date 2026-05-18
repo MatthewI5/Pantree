@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard-layout">
+    <section class="inventory-section">
+        <h2>My Pantry Stock</h2>
+        <ul id="inventory-list">
+            {% for item in items %}
+                <li>{{ item }}</li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <section class="scanner-section">
+        <h2>Quick Add Items</h2>
+        
+        <div id="scanner-container-target">
+            {% include "modules/scanner.html" %}
+        </div>
+    </section>
+</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+<link rel="stylesheet" type="text/css" href="/static/css/scanner.css">
+<div class="scanner-box">
+    <p>Align the barcode within the frame below:</p>
+    
+    <div id="interactive-camera-stream" style="width: 100%; max-width: 400px;"></div>
+    
+    <div id="scan-feedback"></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@ericblade/quagga2/dist/quagga.min.js"></script>
+<script src="/static/js/scanner.js"></script>
+<script>
+    // Execute your scanner.js library initialization 
+    // This runs automatically when the dashboard finishes rendering
+    BarcodeScanner.start(); 
+</script>

@@ -1,0 +1,61 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+skinparam {
+    defaultFontSize  20
+}
+
+actor "User" as U
+actor "Barcode/Nutrition API" as API << System >>
+
+rectangle "Food Tracking System" {
+    
+    package "Stock Management" {
+        usecase "Scan Food Barcode" as UC1
+        usecase "Manual Entry" as UC2
+        usecase "Set Storage Location\n(Fridge/Freezer/Cupboard)" as UC3
+        usecase "Set Use-By Date" as UC4
+        usecase "View Low Stock Alerts" as UC5
+    }
+
+    package "Recipe Management" {
+        usecase "Add/Create Recipes" as UC6
+        usecase "Search Recipes by Stock" as UC7
+        usecase "Check Ingredient Availability" as UC8
+    }
+
+    package "Meal Planning & Shopping" {
+        usecase "Create Meal Plan" as UC9
+        usecase "Generate Shopping List" as UC10
+    }
+
+    package "Nutrition Tracking" {
+        usecase "Track Daily Intake" as UC11
+        usecase "View Calories/Macros" as UC12
+        usecase "Fetch Nutritional Data" as UC13
+    }
+
+    ' Relationships
+    U --> UC1
+    U --> UC2
+    U --> UC5
+    U --> UC6
+    U --> UC7
+    U --> UC9
+    U --> UC11
+
+    ' Include/Extend logic
+    UC1 ..> UC13 : <<include>>
+    UC1 ..> UC3 : <<include>>
+    UC1 ..> UC4 : <<include>>
+    
+    UC7 ..> UC8 : <<include>>
+    UC9 ..> UC10 : <<include>>
+    
+    UC11 ..> UC12 : <<include>>
+    
+    ' System Actor Connections
+    UC13 -- API
+}
+
+@enduml

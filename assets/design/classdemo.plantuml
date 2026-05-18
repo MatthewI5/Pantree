@@ -1,0 +1,89 @@
+@startuml
+skinparam linetype ortho
+
+package "Frontend (PWA/Client)" {
+    class "StockView" as SV {
+        +displayItems()
+        +filterByLocation()
+    }
+    class "ScannerService" as SS {
+        +scanBarcode(): string
+        +handleScan(barcode: string)
+    }
+    class "MealPlanStore" as MPS {
+        +plans: List
+        +generateShoppingList()
+    }
+}
+
+package "Backend (API & Models)" {
+    class "User" {
+        +id: UUID
+        +email: String
+        +preferences: JSON
+    }
+
+    class "InventoryItem" {
+        +id: UUID
+        +barcode: String
+        +productName: String
+        +quantity: Float
+        +unit: String
+        +expiryDate: Date
+        +location: StorageLocation
+        +isLowStock(): Boolean
+    }
+
+    enum "StorageLocation" {
+        FRIDGE
+        FREEZER
+        CUPBOARD
+    }
+
+    class "Recipe" {
+        +id: UUID
+        +name: String
+        +instructions: Text
+        +checkStockAvailability(inventory): StockStatus
+    }
+
+    class "Ingredient" {
+        +quantityRequired: Float
+        +unit: String
+    }
+
+    class "NutritionData" {
+        +calories: Float
+        +protein: Float
+        +carbs: Float
+        +fat: Float
+    }
+
+    class "MealPlan" {
+        +date: Date
+        +type: MealType
+    }
+
+    class "ExternalNutritionAPI" <<Service>> {
+        +fetchByBarcode(barcode: String): NutritionData
+    }
+}
+
+' Relationships
+User "1" -- "0..*" InventoryItem
+User "1" -- "0..*" Recipe
+User "1" -- "0..*" MealPlan
+
+InventoryItem "1" -- "1" NutritionData
+InventoryItem "*" -- "1" StorageLocation
+
+Recipe "1" *-- "1..*" Ingredient
+Ingredient "1" -- "1" InventoryItem : references
+
+MealPlan "0..*" -- "1" Recipe
+
+' Frontend to Backend
+SS ..> ExternalNutritionAPI : calls
+SV ..> InventoryItem : displays
+MPS ..> MealPlan : manages
+@enduml

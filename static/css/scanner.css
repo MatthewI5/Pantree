@@ -1,0 +1,32 @@
+
+/* Ensure the target wrapper container is relatively positioned */
+#interactive-camera-stream {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+    overflow: hidden;
+    background-color: #000;
+    border-radius: 8px;
+}
+
+/* Force Quagga's injected components to take up matching responsive bounds */
+#interactive-camera-stream video, 
+#interactive-camera-stream canvas {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Force Quagga's tracking canvas layer directly on top of the live video matrix */
+#interactive-camera-stream canvas.drawingBuffer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+}
+
+/* Style the live auto-detection alignment lines */
+canvas.drawingBuffer {
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+}

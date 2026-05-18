@@ -1,0 +1,27 @@
+<div class="product-success-card animate-fade-in">
+    <div class="product-info">
+        <h3>{{ name }}</h3>
+        <p class="brand-text">{{ brand }}</p>
+    </div>
+
+    {% if nutrition %}
+    <div class="nutrition-specs-container">
+        <h4>Nutritional Information</h4>
+        <div class="nutrition-grid">
+            
+            {% for stat_name, stat_value in nutrition.items() %}
+            <div class="nutrition-item">
+                <span class="stat-name">{{ stat_name }}</span>
+                <span class="stat-value">{{ stat_value }}</span>
+            </div>
+            {% endfor %}
+            
+        </div>
+    </div>
+    {% endif %}
+
+    <form hx-post="/api/inventory/add" hx-target="#inventory-list" hx-swap="beforeend">
+        <input type="hidden" name="barcode" value="{{ code }}">
+        <button type="submit" class="btn-confirm">Add to Pantry</button>
+    </form>
+</div>
